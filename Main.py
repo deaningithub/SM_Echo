@@ -9,7 +9,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 #file info
-filepath="D:\Idean\Smart meter\location_001_dataset_001\location_001_ivdata_005.txt"
+filepath="D:\Idean\Smart meter\location_001_dataset_001\location_001_ivdata_003.txt"
 with open(filepath,'rt') as fileobj:
     cin = csv.reader(fileobj)
     datas = [row for row in cin]
@@ -21,13 +21,19 @@ count=23+5000*0 #as least 23
 if count < 23:
     #print('Pleas set the start value more than 22 (at least 23)' )
     sys.exit("Pleas set the start value more than 22 (at least 23)")
+rl=1212*9
+if rl+count >len(datas):
+    sys.exit("Out of range -> datas lenth just 1249223")
+print(len(datas))
 
-rl=1200*75
+
+
+    
+
 
 #scale: 1000->5period
 
-if rl+count >len(datas):
-    sys.exit("Out of range -> datas lenth just 1249223")
+
 X_value = np.arange(rl,dtype = np.float)
 Phase_A = np.arange(rl,dtype = np.float)
 Voltage = np.arange(rl,dtype = np.float)
@@ -36,6 +42,39 @@ for i in range(rl):
     Phase_A[i]=float(datas[i+count][1])
     Voltage[i]=float(datas[i+count][3])
     
+
+p=250
+AutoPA =  Phase_A  
+scal1 = np.zeros(p)
+for i in range(rl):
+    Total=0
+    for pe in range(p):
+         if i+pe < rl:
+             Total = Total + (AutoPA[i+pe]-AutoPA[i])*(AutoPA[i+pe]-AutoPA[i])
+             scal1[pe]=Total
+    print(scal1.min())
+    
+
+
+
+
+   
+'''
+scal=np.zeros(rl,dtype = np.float)
+for i in range(rl):
+    if i+p < rl:
+        scal[i] = AutoPA[i+p]-AutoPA[i]
+        if scal[i]*scal[i] < 0.8:
+            scal[i]=0
+            
+    
+plt.plot(range(rl),scal)
+'''
+#plt.plot(X_value,Phase_A,color="r")
+
+#print(scal.min(),np.where(scal ==1539.751589419884))
+#i, = np.where(a == value)
+'''   
 i=0 
 count=0
 meanLen=20
@@ -95,15 +134,15 @@ for i in range(Phase_A.size-meanLen):
 
  
   
-'''
+
         for av in range(10):
             P=P+Phase_A[i+av]
             V=V+Voltage[i+av]
         Pmean[i+1] = P/10
         Vmean[i+1] = V/10
-'''        
+       
 
-'''   
+   
 for i in range(100):
     print(Pmean[i])
 '''
@@ -115,7 +154,7 @@ plt.figure(figsize=(24,13),num='startmeter')
 plt.plot(x,Pmean)
 '''
 #plt.show()
-
+'''
 #plt.scatter(X_value,getPeak_One,s=40,color="g")
 #plt.scatter(X_value,getPeak_Two,s=40,color="r")
 #plt.scatter(X_value,getPeak_Thr,s=40,color="y")
@@ -124,7 +163,8 @@ plt.plot(x,Pmean)
 plt.plot(X_value,Pmean)
 
 plt.show()
-'''
+
+
 #random wolk
 plt.figure(figsize=(24,13),num='startmeter') 
 #plt.plot(X_value,Phase_A)
