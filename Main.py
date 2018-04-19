@@ -11,24 +11,32 @@ from scipy import fftpack
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
 #file info
-filenum=248
+filenum=312#248
 filepath="D:\Idean\Smart meter\location_001_dataset_001\location_001_ivdata_"+str(filenum)+".txt"
 with open(filepath,'rt') as fileobj:
     cin = csv.reader(fileobj)
     datas = [row for row in cin]
 #12:36:58.32349999999999991920571,1189223
 #12:38:37.42349999999999991826312,
-plt.figure(figsize=(18,7),num='startmeter') 
-dataTime=datas[16][1]    
+plt.figure(figsize=(18,5),num='startmeter') 
+dataTime=datas[16][1]   
+
+
+#Modify area: 
 count=23#+6000*63+1200#*2+1200*100#+600 #as least 23
-count =959808-600*40#-1200*2#-600#9#+6000*15#+500
+count =373008-1200*1#-600#9#+6000*15#+500
 #scale: 50k->4.18 100k->8.34 1M->83.4
+rl=len(datas)-count#
+#rl =len(datas)-count-60000*18-2400*8
+rl =1200*3
+
+
+
+
 if count < 23:
     #print('Pleas set the start value more than 22 (at least 23)' )
     sys.exit("Pleas set the start value more than 22 (at least 23)")
-rl=len(datas)-count#
-#rl =len(datas)-count-60000*18-2400*8
-rl =1200*40
+
 
 if rl+count >len(datas):
     sys.exit("Out of range -> datas lenth just 1249223")
@@ -232,17 +240,21 @@ plt.plot(x,Pmean)
 #plt.plot(X_value,Power/500,color='g',label="Power B")
 #ax = plt.axes()
 
+#plt.plot(Voltage/250,Phase_B,color='b',label="Phase_B")
 
-plt.plot(X_value,Phase_B,color='k',label="Phase_B")
+#plt.plot(X_value,Phase_B,color='k',label="Phase_B")
 #plt.plot(X_value,Voltage/250,color='b',label="Voltage/250")
+#plt.plot(Voltage/250,Phase_A,color='k',label="Phase_A")
 
 #plt.plot(X_value,A,color='b',label="A")
-plt.plot(X_value,yB1,color='r',label="B Cutoff "+str(cutoff))
+#plt.plot(X_value,yA1,color='r',label="B Cutoff "+str(cutoff))
 #plt.plot(X_value,yA1,color='r',label="A Cutoff "+str(cutoff))
 #plt.plot(X_value,B,color='b',label="B without filter")
 #plt.plot(X_value,Power/480,color='k',label="Power B/500")
 #plt.plot(X_value,B,color='r',label="B without filter")
 #plt.plot(X_value,yB1,color='r',label="B Cutoff 60Hz")
+plt.plot(Voltage/250,yB1,color='r',label="B Cutoff 60Hz")
+plt.plot(Voltage/250,yA1,color='b',label="B Cutoff 60Hz")
 
 #plt.plot(X_value,y2,color='r',label="Cutoff 60Hz")
 #plt.plot(X_value,y3,color='k',label="Cutoff 100Hz")
@@ -275,6 +287,28 @@ ax.set_xlim(-f_s / 2, f_s / 2)
 ax.set_ylim(-5, 110)'''
 #plt.figure(figsize=(18,13),num='startmeter')
  
+
+
+plt.figure(figsize=(18,5),num='startmeter') 
+plt.plot(X_value,Voltage/250,color='b',label="Voltage/250")
+plt.plot(X_value,Phase_B/10,color='k',label="Phase_B")
+plt.plot(X_value,yB1,color='r',label="B Cutoff 60Hz")
+
+legend = plt.legend(loc='best', shadow=True, fontsize='x-large')#ax.arrow(X_value[503999], -10, X_value[503999], A[503999], head_width=0.05, head_length=0.1, fc='g', ec='g')
+plt.title('File:'+str(filenum)+', Data Record Time :' + dataTime +', start='+ str(count) +', len=' + str(rl))
+plt.show()
+plt.show()
+
+'''
+plt.figure(figsize=(18,7),num='startmeter') 
+plt.plot(X_value,Voltage/250,color='b',label="Voltage/250")
+plt.plot(X_value,Phase_A/2,color='k',label="Phase_A")
+plt.plot(X_value,yA1,color='b',label="A Cutoff 60Hz")
+legend = plt.legend(loc='best', shadow=True, fontsize='x-large')#ax.arrow(X_value[503999], -10, X_value[503999], A[503999], head_width=0.05, head_length=0.1, fc='g', ec='g')
+plt.title('File:'+str(filenum)+', Data Record Time :' + dataTime +', start='+ str(count) +', len=' + str(rl))
+plt.show()
+plt.show()
+'''
 '''
 #random wolk
 plt.figure(figsize=(24,13),num='startmeter') 
